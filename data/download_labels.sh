@@ -1,3 +1,5 @@
+#/bin/bash
+
 cd data
 cd td 
 # Download labels for words, phones and speakers
