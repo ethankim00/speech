@@ -3,7 +3,7 @@ import os
 import subprocess
 
 
-def rename_files(path:str, domain:str):
+def rename_files(path: str, domain: str):
     """
     Rename the downloaded files prepending the last two subdirectories to form a unique identifier
     """
@@ -15,7 +15,11 @@ def rename_files(path:str, domain:str):
         for file in files:
             filename = os.path.join(subdir, file)
             new_filename = "-".join(filename.split("/")[-name_dir_num:])
-            process = subprocess.run(['cp', filename, os.path.join(path, new_filename)], stdout=subprocess.PIPE, universal_newlines=True)
+            process = subprocess.run(
+                ["cp", filename, os.path.join(path, new_filename)],
+                stdout=subprocess.PIPE,
+                universal_newlines=True,
+            )
             os.remove(filename)
 
 
