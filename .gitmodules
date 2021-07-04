@@ -1,0 +1,3 @@
+[submodule "soxan"]
+	path = soxan
+	url = https://github.com/m3hrdadfi/soxan.git
