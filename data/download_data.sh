@@ -1,7 +1,5 @@
 #!/bin/bash
-
 echo "Downloading Ultrasuite Data"
-
 # Download wav files
 mkdir data 
 cd data
