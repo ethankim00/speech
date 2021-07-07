@@ -1,3 +1,6 @@
 [submodule "soxan"]
 	path = speech/soxan
 	url = https://github.com/m3hrdadfi/soxan.git
+[submodule "speech/soxan"]
+	path = speech/soxan
+	url = https://github.com/m3hrdadfi/soxan.git
