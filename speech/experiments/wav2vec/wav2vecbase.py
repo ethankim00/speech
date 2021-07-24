@@ -2,7 +2,7 @@
 
 import os
 import sys
-from dataclasses import dataclass
+#from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple, Union
 
@@ -89,7 +89,7 @@ def train():
     label_list = train_dataset.unique(output_column)
     label_list.sort()  # Let's sort it for determinism
     num_labels = len(label_list)
-    print(f"A classification problem with {num_labels} classes: {label_list}")
+    #print(f"A classification problem with {num_labels} classes: {label_list}")
 
     config = AutoConfig.from_pretrained(
         model_name_or_path,
@@ -104,7 +104,7 @@ def train():
         model_name_or_path,
     )
     target_sampling_rate = processor.feature_extractor.sampling_rate
-    print(f"The target sampling rate: {target_sampling_rate}")
+    #print(f"The target sampling rate: {target_sampling_rate}")
 
     def preprocess_function(dataset):
         """

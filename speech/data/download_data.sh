@@ -19,9 +19,9 @@ python rename_files.py "./data/td/wav" "td"
 python rename_files.py "./data/td/transcripts" "td"
 #Remove folders
 cd ./data/td/wav
-rm -rf core-uxtd/
+sudo rm -rf core-uxtd/
 cd ../transcripts
-rm -rf core-uxtd/
+sudo rm -rf core-uxtd/
 cd ../../../
 cd data 
 mkdir ssd
@@ -37,12 +37,12 @@ rsync -av --relative ultrasuite-rsync.inf.ed.ac.uk::ultrasuite/core-uxssd/core/*
 rsync -av --relative ultrasuite-rsync.inf.ed.ac.uk::ultrasuite/core-upx/core/*/*/*.txt .
 cd ../../../
 
-python rename_files.py "./data/ssd/wav" "ssd"
-python rename_files.py "./data/ssd/transcripts" "ssd"
+python3 rename_files.py "./data/ssd/wav" "ssd"
+python3 rename_files.py "./data/ssd/transcripts" "ssd"
 
 #Remove folders
 cd ./data/ssd/wav
-rm -rf core-uxssd/
+sudo rm -rf core-uxssd/
 cd ../transcripts
-rm -rf core-uxssd/
+sudo rm -rf core-uxssd/
 cd ../../../
