@@ -47,7 +47,7 @@ class DataCollatorCTCWithPadding:
         ]
         label_features = [feature["labels"] for feature in features]
 
-        d_type = torch.long if isinstance(label_features[0], int) else torch.float
+        d_type = torch.float  # torch.long if isinstance(label_features[0], int) else
 
         batch = self.feature_extractor.pad(
             input_features,

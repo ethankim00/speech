@@ -57,15 +57,19 @@ def train():
         "./speech/data/ssd",  # Test Locally see where filepath is from
     )
     print("Number of Datapoints: ", len(speech_df))
-    speech_df = clean_dataframe(speech_df)
+    speech_df = clean_dataframe(speech_df, min_duration=0.5)
     train_df, test_df = train_test_split(
         speech_df, test_size=0.2, random_state=101, stratify=speech_df["labels"]
     )
     train_df = train_df.reset_index(drop=True)
     test_df = test_df.reset_index(drop=True)
 
-    train_df.to_csv(f"{save_path}/train.csv", sep="\t", encoding="utf-8", index=False)
-    test_df.to_csv(f"{save_path}/test.csv", sep="\t", encoding="utf-8", index=False)
+    train_df.to_csv(
+        "{}/train.csv".format(save_path), sep="\t", encoding="utf-8", index=False
+    )
+    test_df.to_csv(
+        "{}/test.csv".format(save_path), sep="\t", encoding="utf-8", index=False
+    )
 
     data_files = {
         "train": "./train.csv",
@@ -131,13 +135,13 @@ def train():
     # TODO factor out import hyperparameters
     training_args = TrainingArguments(
         # output_dir="/content/wav2vec2-xlsr-greek-speech-emotion-recognition",
-        output_dir="/content/drive/MyDrive/data",
+        output_dir="./",
         per_device_train_batch_size=2,
         per_device_eval_batch_size=2,
         gradient_accumulation_steps=2,
         evaluation_strategy="steps",
         num_train_epochs=5.0,
-        fp16=True,
+        # fp16=True,
         save_steps=100,
         eval_steps=100,
         logging_steps=100,

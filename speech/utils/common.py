@@ -1,6 +1,7 @@
 import os
 from typing import List
 
+import librosa
 import pandas as pd
 import numpy as np
 from pandas.core.frame import DataFrame
@@ -39,20 +40,80 @@ def build_dataframe_for_classification(td_path: str, ssd_path: str):
     return df
 
 
-def clean_dataframe(df: pd.DataFrame) -> pd.DataFrame:
+def clean_dataframe(df: pd.DataFrame, min_duration: float = 0.5) -> pd.DataFrame:
     """
-    Filter out broken file links from dataframe
+    Perfrom preprocessing steps on audio dataframe
+    1. Remove broken file paths
+    2. Shuffle data
+    3.
 
     Args:
         df (pd.DataFrame): Input dataframe
+        min_duration (float): Minimum duration of audio to keep in seconds. Defaults to 0.5.
+
+    Returns:
+        pd.DataFrame: Cleaned dataframe
+    """
+    df = filter_broken_links(df)
+    df = filter_duration(df, min_duration=min_duration)
+    df = shuffle_df(df)
+    return df
+
+
+def shuffle_df(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Shuffle a dataframe
+
+    Args:
+        df (pd.DataFrame): Input Dataframe
+
+    Returns:
+        pd.DataFrame: Output Dataframe
+    """
+    df = df.sample(frac=1)
+    df = df.reset_index(drop=True)
+    return df
+
+
+def filter_broken_links(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Remove broken file paths
+
+    Args:
+        df (pd.DataFrame): Input df
+
+    Returns:
+        pd.DataFrame: Output df
     """
     df["status"] = df["file_path"].apply(
         lambda path: True if os.path.exists(path) else None
     )
     df = df.dropna(subset=["file_path"])
     df = df.drop("status", 1)
-    df = df.sample(frac=1)
-    df = df.reset_index(drop=True)
+    # df = df.reset_index(drop=True)
+    return df
+
+
+def filter_duration(
+    df: pd.DataFrame, min_duration: float = 0.5, sample_rate: int = 16000
+) -> pd.DataFrame:
+    """
+    Remove audio samples under a certain duration
+
+    Args:
+        df (pd.DataFrame): Input dataframe
+        min_duration (float): Minimum duration of audio to keep in seconds. Defaults to 0.5.
+
+    Returns:
+        pd.DataFrame: Filtered dataframe
+    """
+    df["duration"] = df["file_path"].apply(
+        lambda path: len(librosa.load(path, sr=sample_rate)[0]) / sample_rate
+    )
+    print(df["duration"])
+    df = df.loc[df["duration"] > min_duration]
+    print(len(df))
+    # df = df.reset_index(drop=True)
     return df
 
 
@@ -70,7 +131,7 @@ def speech_file_to_array(path: str, target_sampling_rate: int = 16000) -> np.arr
     speech_array, sampling_rate = torchaudio.load(path)
     resampler = torchaudio.transforms.Resample(sampling_rate, target_sampling_rate)
     speech = resampler(speech_array).squeeze().numpy()
-    return speech
+    return speech.astype(float)
 
 
 def label_to_id(label, label_list):
