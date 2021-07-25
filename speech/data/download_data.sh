@@ -15,8 +15,8 @@ rsync -av --relative ultrasuite-rsync.inf.ed.ac.uk::ultrasuite/core-uxtd/core/*/
 
 
 cd ../../../
-python rename_files.py "./data/td/wav" "td"
-python rename_files.py "./data/td/transcripts" "td"
+python3 rename_files.py "./data/td/wav" "td"
+python3 rename_files.py "./data/td/transcripts" "td"
 #Remove folders
 cd ./data/td/wav
 sudo rm -rf core-uxtd/
