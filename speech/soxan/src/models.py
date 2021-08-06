@@ -11,6 +11,7 @@ from transformers.models.hubert.modeling_hubert import (
     HubertModel,
 )
 
+from speech.models.classification import LSTMClassificationHead
 from speech.soxan.src.modeling_outputs import SpeechClassifierOutput
 
 
@@ -41,20 +42,23 @@ class Wav2Vec2ForSpeechClassification(Wav2Vec2PreTrainedModel):
         self.config = config
 
         self.wav2vec2 = Wav2Vec2Model(config)
-        self.classifier = Wav2Vec2ClassificationHead(config)
+        #self.classifier = Wav2Vec2ClassificationHead(config)
+        self.classifier = LSTMClassificationHead(config, lstm_hidden_dimension = 200)
 
         self.init_weights()
 
     def freeze_feature_extractor(self):
         self.wav2vec2.feature_extractor._freeze_parameters()
 
-    def merged_strategy(self, hidden_states, mode="mean"):
+    def merged_strategy(self, hidden_states, mode="none"):
         if mode == "mean":
             outputs = torch.mean(hidden_states, dim=1)
         elif mode == "sum":
             outputs = torch.sum(hidden_states, dim=1)
         elif mode == "max":
             outputs = torch.max(hidden_states, dim=1)[0]
+        elif mode == "none":
+            outputs = hidden_states
         else:
             raise Exception(
                 "The pooling method hasn't been defined! Your pooling mode must be one of these ['mean', 'sum', 'max']"
@@ -85,6 +89,7 @@ class Wav2Vec2ForSpeechClassification(Wav2Vec2PreTrainedModel):
         hidden_states = self.merged_strategy(hidden_states, mode=self.pooling_mode)
         logits = self.classifier(hidden_states)
 
+        self.config.problem_type = "single_label_classification"
         loss = None
         if labels is not None:
             if self.config.problem_type is None:

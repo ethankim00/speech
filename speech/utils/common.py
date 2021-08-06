@@ -55,7 +55,6 @@ def clean_dataframe(df: pd.DataFrame, min_duration: float = 0.5) -> pd.DataFrame
         pd.DataFrame: Cleaned dataframe
     """
     df = filter_broken_links(df)
-    df = filter_duration(df, min_duration=min_duration)
     df = shuffle_df(df)
     return df
 
@@ -107,6 +106,7 @@ def filter_duration(
     Returns:
         pd.DataFrame: Filtered dataframe
     """
+    print("Filtering short utterances")
     df["duration"] = df["file_path"].apply(
         lambda path: len(librosa.load(path, sr=sample_rate)[0]) / sample_rate
     )
@@ -131,7 +131,7 @@ def speech_file_to_array(path: str, target_sampling_rate: int = 16000) -> np.arr
     speech_array, sampling_rate = torchaudio.load(path)
     resampler = torchaudio.transforms.Resample(sampling_rate, target_sampling_rate)
     speech = resampler(speech_array).squeeze().numpy()
-    return speech.astype(float)
+    return speech
 
 
 def label_to_id(label, label_list):
