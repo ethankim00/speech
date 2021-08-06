@@ -14,7 +14,7 @@ def rename_files(path: str, domain: str):
     for subdir, dirs, files in os.walk(path):
         for file in files:
             filename = os.path.join(subdir, file)
-            new_filename = "-".join(filename.split("/")[name_dir_num:])
+            new_filename = "-".join(filename.split("/")[-name_dir_num:])
             process = subprocess.run(
                 ["cp", filename, os.path.join(path, new_filename)],
                 stdout=subprocess.PIPE,

@@ -46,3 +46,10 @@ sudo rm -rf core-uxssd/
 cd ../transcripts
 sudo rm -rf core-uxssd/
 cd ../../../
+
+# download labels
+sh download_labels.sh
+# Remove instructor audio + short utterances
+cd ../../
+python3 -m speech.data.preprocess_audio "./speech/data/data/ssd/wav"
+python3 -m speech.data.preprocess_audio "./speech/data/data/td/wav"
