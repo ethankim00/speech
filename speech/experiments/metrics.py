@@ -4,7 +4,7 @@ import numpy as np
 from transformers import EvalPrediction
 
 
-def unweighted_average_recall(labels, preds) -> int:
+def unweighted_average_recall(labels, preds) -> float:
     """
     Calculate Unweighted Average Recall Metric
 
@@ -13,7 +13,7 @@ def unweighted_average_recall(labels, preds) -> int:
         preds (array): Class predictions
 
     Returns:
-        (int): UAR
+        (float): UAR
     """
     return recall_score(labels, preds, average="macro")
 
